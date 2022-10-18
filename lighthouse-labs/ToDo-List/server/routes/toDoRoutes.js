@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { newToDo, getAllToDoById } = require("../db/database")
+const { newToDo, getAllToDoById, updateExistingToDoById, deleteExistingToDo } = require("../db/database")
 
 // Routes
 
@@ -31,6 +31,32 @@ router.get("/:id", async (req, res) => {
     console.error(error.response ? error.response.body : error)
   }
 })
-// Get all todo
+
+// Update a existing todo list by id
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const { description } = req.body
+    const result = await updateExistingToDoById(description, id)
+    if(result) {
+      res.send(result)
+    }
+  } catch (error) {
+    console.error(error.response ? error.response.body : error)
+  }
+})
+
+// Delete a todo
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const result = await deleteExistingToDo(id)
+    if(result) {
+      res.send(result)
+    }
+  } catch (error) {
+    console.error(error.response ? error.response.body : error)
+  }
+})
 
 module.exports = router
